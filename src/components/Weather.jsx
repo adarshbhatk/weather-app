@@ -19,6 +19,22 @@ function Weather() {
           <img src={clear_icon} alt=" Weather icon" className='weather-icon' />
           <p className='temperature'>22°C</p>
           <p className='location'>Bengaluru</p>
+          <div className="weather-data">
+            <div className="col">
+                <img src={humidity_icon} alt="Humidity icon" />
+                <div>
+                    <p>80%</p>
+                    <span>Humidity</span>
+                    </div>
+            </div>
+            <div className="col">
+                <img src={wind_icon} alt="Wind icon" />
+                <div>
+                    <p>3.5 km/h</p>
+                    <span>Wind Speed</span>
+                    </div>
+            </div>
+          </div>
         </div>
       );
 }
