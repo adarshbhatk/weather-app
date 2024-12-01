@@ -44,8 +44,7 @@ function Weather() {
       }
       try {
 
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_API_KEY}`;
-        const response = await fetch(url);
+        const response = await fetch(`/api/weather?city=${city}`);
         const data = await response.json();
 
         if(!response.ok) {
