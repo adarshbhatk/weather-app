@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Weather.css';
 import search_icon from '../assets/search.png';
 import clear_icon from '../assets/clear.png';
@@ -7,18 +7,50 @@ import drizzle_icon from '../assets/drizzle.png';
 import rain_icon from '../assets/rain.png';
 import snow_icon from '../assets/snow.png';
 import wind_icon from '../assets/wind.png';
+import mist_icon from '../assets/mist.png';
 import humidity_icon from '../assets/humidity.png';
 
 function Weather() {
 
+    const [weatherData, setWeatherData] = useState(false);
+
+    const weatherIcons = {
+      "01d": clear_icon,
+      "01n": clear_icon,
+      "02d": cloud_icon,
+      "02n": cloud_icon,
+      "03d": cloud_icon,
+      "03n": cloud_icon,
+      "04d": drizzle_icon,
+      "04n": drizzle_icon,
+      "09d": rain_icon,
+      "09n": rain_icon,
+      "10d": rain_icon,
+      "10n": rain_icon,
+      "11d": rain_icon,
+      "11n": rain_icon,
+      "13d": snow_icon,
+      "13n": snow_icon,
+      "50d": mist_icon,
+      "50n": mist_icon
+    };
 
     const search = async (city) => {
       try {
 
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${import.meta.env.VITE_API_KEY}`;
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_API_KEY}`;
         const response = await fetch(url);
         const data = await response.json();
         console.log(data);
+        const icon = weatherIcons[data.weather[0].icon] || clear_icon;
+        setWeatherData({
+          humidity: data.main.humidity,
+          windSpeed: data.wind.speed,
+          temperature: Math.floor(data.main.temp),
+          location: data.name,
+          icon: icon
+        });
+        console.log(weatherData);
         
       } catch (error) {
         console.log("Error fetching weather data: ", error);
@@ -26,7 +58,7 @@ function Weather() {
     }
 
     useEffect(() => {
-      search("Bengaluru")
+      search("Kasaragod")
     }, []);
 
     return (
@@ -35,21 +67,21 @@ function Weather() {
             <input type="text" placeholder='Search' />
             <img src={search_icon} alt="Search icon" />
           </div>
-          <img src={clear_icon} alt=" Weather icon" className='weather-icon' />
-          <p className='temperature'>22°C</p>
-          <p className='location'>Bengaluru</p>
+          <img src={weatherData.icon} alt=" Weather icon" className='weather-icon' />
+          <p className='temperature'>{weatherData.temperature}°C</p>
+          <p className='location'>{weatherData.location}</p>
           <div className="weather-data">
             <div className="col">
                 <img src={humidity_icon} alt="Humidity icon" />
                 <div>
-                    <p>80%</p>
+                    <p>{weatherData.humidity}%</p>
                     <span>Humidity</span>
                     </div>
             </div>
             <div className="col">
                 <img src={wind_icon} alt="Wind icon" />
                 <div>
-                    <p>3.5 km/h</p>
+                    <p>{weatherData.windSpeed} km/h</p>
                     <span>Wind Speed</span>
                     </div>
             </div>
